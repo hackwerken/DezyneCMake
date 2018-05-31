@@ -1,0 +1,40 @@
+ import led.dzn;
+ 
+interface IController {
+	in void start();
+	in void stop();
+	
+	behaviour {
+		enum State {Started, Stopped};
+		State state = State.Stopped;
+		[state.Stopped] {
+			on start : {state = State.Started;}
+			on stop : illegal;
+		}
+		[state.Started] {
+			on stop : {state = State.Stopped;}
+			on start : illegal;
+		}
+	}
+}
+component Controller {
+	provides IController iController;
+	requires ILed iLed;
+	
+	behaviour {
+		enum State {Started, Stopped};
+		State state = State.Stopped;
+		[state.Stopped] {
+			on iController.start() : { state = State.Started; iLed.setOn(); }
+			on iController.stop() : illegal;
+		}
+		[state.Started] {
+			on iController.stop() : { state = State.Stopped; iLed.setOff(); }
+			on iController.start() : illegal;
+		}
+		
+		
+	
+	}
+}
+ 

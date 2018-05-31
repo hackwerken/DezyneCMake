@@ -1,0 +1,32 @@
+interface ILed {
+	enum State {
+		On,
+		Off
+	};
+	
+	in void setOn();
+	in void setOff();
+	
+	behaviour {
+		State state = State.Off;
+		
+		[state.On]
+		{
+			on setOn: illegal;
+			on setOff: state = State.Off;
+		}
+		
+		[state.Off]
+		{
+			on setOn: state = State.On;
+			on setOff: illegal;
+		}
+		
+	}
+	
+}
+
+component Led {
+	provides ILed iLed;
+	
+}

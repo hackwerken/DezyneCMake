@@ -1,0 +1,14 @@
+import controller.dzn;
+
+component Example {
+	provides IController iController;
+	
+	system {
+		Controller controller;
+		Led led;
+		
+		controller.iController <=> iController;
+		controller.iLed <=> led.iLed;
+		
+	}
+}
